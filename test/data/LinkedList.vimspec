@@ -1,0 +1,160 @@
+Describe Node
+  Before all
+    let V = vital#of('vital')
+    let PowerAssert = V.import('Vim.PowerAssert')
+    execute PowerAssert.define('PowerAssert')
+    let scope = data#LinkedList#import()
+  End
+
+  Describe .new(data)
+    It returns new node with data, next and prev field.
+      let new_node = scope.Node.new(1)
+      PowerAssert has_key(new_node, 'data')
+      PowerAssert has_key(new_node, 'prev')
+      PowerAssert has_key(new_node, 'next')
+      PowerAssert new_node.data is# 1
+    End
+
+    It supports dict as data.
+      let new_node = scope.Node.new({'a': 1, 'b': 2})
+      PowerAssert new_node.data ==# {'a': 1, 'b': 2}
+    End
+
+    It supports list as data.
+      let new_node = scope.Node.new(range(14))
+      PowerAssert new_node.data ==# range(14)
+    End
+
+    It supports empty string as data.
+      let new_node = scope.Node.new('')
+      PowerAssert new_node.data is# ''
+    End
+
+    It supports empty dict as data.
+      let new_node = scope.Node.new({})
+      PowerAssert new_node.data ==# {}
+    End
+
+    It supports empty list as data.
+      let new_node = scope.Node.new([])
+      PowerAssert new_node.data ==# []
+    End
+  End
+
+  Describe .set_next(node)
+    It sets next node to receiver node.
+      let node = scope.Node.new(1)
+      let next_node = scope.Node.new(2)
+      call node.set_next(next_node)
+      PowerAssert node.next is# next_node
+    End
+
+    It sets prev node to given node.
+      let node = scope.Node.new(1)
+      let next_node = scope.Node.new(2)
+      call node.set_next(next_node)
+      PowerAssert next_node.prev is# node
+    End
+
+    It set next node even if given node is none.
+      let node = scope.Node.new(1)
+      let next_node = scope.None
+      call node.set_next(next_node)
+      PowerAssert node.next is# next_node
+    End
+
+    It won't set prev node if given node is none.
+      let node = scope.Node.new(1)
+      let next_node = scope.None
+      call node.set_next(next_node)
+      PowerAssert !has_key(next_node, 'prev')
+      PowerAssert node.next is# next_node
+    End
+
+    It node.next.prev is# node.
+      let node = scope.Node.new(1)
+      let next_node = scope.Node.new(2)
+      call node.set_next(next_node)
+      PowerAssert node.next.prev is# node
+    End
+  End
+End
+
+Describe LinkedList
+  Before all
+    let V = vital#of('vital')
+    let PowerAssert = V.import('Vim.PowerAssert')
+    execute PowerAssert.define('PowerAssert')
+    let scope = data#LinkedList#import()
+  End
+
+  Describe .new()
+    It creates empty LinkedList
+      let xs = scope.LinkedList.new()
+      PowerAssert xs.head ==# scope.None
+      PowerAssert xs.last ==# scope.None
+    End
+  End
+
+  Describe .add_first(data)
+    It supports adding data to empty LinkedList.
+      let xs = scope.LinkedList.new()
+      let data = 1
+      call xs.add_first(data)
+      PowerAssert xs.head.data is# data
+      PowerAssert xs.last.data is# data
+    End
+
+    It supports adding data to the first of LinkedList.
+      let xs = scope.LinkedList.new()
+      let data1 = 1
+      let data2 = 2
+      let data3 = 3
+      call xs.add_first(data1)
+      call xs.add_first(data2)
+      call xs.add_first(data3)
+      PowerAssert xs.head.data is# data3
+      PowerAssert xs.last.data is# data1
+    End
+
+    It sets head and prev correctly.
+      let xs = scope.LinkedList.new()
+      let data1 = 1
+      let data2 = 2
+      let data3 = 3
+      call xs.add_first(data1)
+      call xs.add_first(data2)
+      call xs.add_first(data3)
+      " None <-> 3 <-> 2 <-> 1 <-> None
+      "          |           |
+      "          head        last
+      PowerAssert xs.head.prev ==# scope.None
+      PowerAssert xs.head.data is# 3
+      PowerAssert xs.head.next.data is# 2
+      PowerAssert xs.head.next.next.data is# 1
+      PowerAssert xs.head.next.next.next ==# scope.None
+      PowerAssert xs.last.next ==# scope.None
+      PowerAssert xs.last.data is# 1
+      PowerAssert xs.last.prev.data is# 2
+      PowerAssert xs.last.prev.prev.data is# 3
+      PowerAssert xs.last.prev.prev.prev ==# scope.None
+    End
+  End
+
+  Describe .size()
+    It should returns 0 with empty LinkedList.
+      let xs = scope.LinkedList.new()
+      PowerAssert xs.size() is# 0
+    End
+
+    It should returns size of LinkedList.
+      let xs = scope.LinkedList.new()
+      let cnt = 0
+      for data in range(10)
+        call xs.add_first(data)
+        let cnt += 1
+        PowerAssert xs.size() is# cnt
+      endfor
+    End
+  End
+End
