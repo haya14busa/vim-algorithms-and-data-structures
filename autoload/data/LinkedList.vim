@@ -45,10 +45,12 @@ endfunction
 " @type { head: <Node|none>, last: <Node|none> }
 let s:LinkedList = { 'head': s:None, 'last': s:None }
 
+" .new() returns new LinkedList instance.
 function! s:LinkedList.new() abort
   return deepcopy(self)
 endfunction
 
+" .add_first() addes given data to the head of LinkedList.
 " @param data: <any>
 function! s:LinkedList.add_first(data) abort
   let new_node = s:Node.new(a:data)
@@ -59,6 +61,7 @@ function! s:LinkedList.add_first(data) abort
   let self.head = new_node
 endfunction
 
+" .size() returns size of LinkedList.
 function! s:LinkedList.size() abort
   let cnt = 0
   let current = self.head
