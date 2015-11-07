@@ -141,6 +141,51 @@ Describe LinkedList
     End
   End
 
+  Describe .add_last(data)
+    It supports adding data to empty LinkedList.
+      let xs = scope.LinkedList.new()
+      let data = 1
+      call xs.add_last(data)
+      PowerAssert xs.head.data is# data
+      PowerAssert xs.last.data is# data
+    End
+
+    It supports adding data to the first of LinkedList.
+      let xs = scope.LinkedList.new()
+      let data1 = 1
+      let data2 = 2
+      let data3 = 3
+      call xs.add_last(data1)
+      call xs.add_last(data2)
+      call xs.add_last(data3)
+      PowerAssert xs.head.data is# data1
+      PowerAssert xs.last.data is# data3
+    End
+
+    It sets head and prev correctly.
+      let xs = scope.LinkedList.new()
+      let data1 = 1
+      let data2 = 2
+      let data3 = 3
+      call xs.add_last(data1)
+      call xs.add_last(data2)
+      call xs.add_last(data3)
+      " None <-> 1 <-> 2 <-> 3 <-> None
+      "          |           |
+      "          head        last
+      PowerAssert xs.head.prev ==# scope.None
+      PowerAssert xs.head.data is# 1
+      PowerAssert xs.head.next.data is# 2
+      PowerAssert xs.head.next.next.data is# 3
+      PowerAssert xs.head.next.next.next ==# scope.None
+      PowerAssert xs.last.next ==# scope.None
+      PowerAssert xs.last.data is# 3
+      PowerAssert xs.last.prev.data is# 2
+      PowerAssert xs.last.prev.prev.data is# 1
+      PowerAssert xs.last.prev.prev.prev ==# scope.None
+    End
+  End
+
   Describe .size()
     It should returns 0 with empty LinkedList.
       let xs = scope.LinkedList.new()

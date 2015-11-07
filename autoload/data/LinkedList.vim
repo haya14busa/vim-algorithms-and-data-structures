@@ -61,6 +61,19 @@ function! s:LinkedList.add_first(data) abort
   let self.head = new_node
 endfunction
 
+" .add_last() addes given data to the last of LinkedList.
+" @param data: <any>
+function! s:LinkedList.add_last(data) abort
+  let new_node = s:Node.new(a:data)
+  if !s:is_none(self.last)
+    call self.last.set_next(new_node)
+    let self.last = new_node
+  else
+    let self.head = new_node
+    let self.last = new_node
+  endif
+endfunction
+
 " .size() returns size of LinkedList.
 function! s:LinkedList.size() abort
   let cnt = 0
