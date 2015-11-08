@@ -4,6 +4,7 @@ Describe Node
     let PowerAssert = V.import('Vim.PowerAssert')
     execute PowerAssert.define('PowerAssert')
     let scope = data#LinkedList#import()
+    let s:assert = PowerAssert.assert
   End
 
   Describe .new(data)
@@ -201,5 +202,27 @@ Describe LinkedList
         PowerAssert xs.size() is# cnt
       endfor
     End
+  End
+
+  Describe .to_string()
+    It should returns string representation of empty LinkedList.
+      let xs = scope.LinkedList.new()
+      PowerAssert xs.to_string() is# '[]'
+    End
+
+    It should returns string representation of one element LinkedList.
+      let xs = scope.LinkedList.new()
+      call xs.add_first(1)
+      PowerAssert xs.to_string() is# '[1]'
+    End
+
+    It should returns string representation of multiple elements LinkedList.
+      let xs = scope.LinkedList.new()
+      call xs.add_first('san')
+      call xs.add_first(2)
+      call xs.add_first(1)
+      PowerAssert xs.to_string() is# '[1, 2, ''san'']'
+    End
+
   End
 End
