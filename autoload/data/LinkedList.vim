@@ -12,7 +12,7 @@ function! data#LinkedList#import() abort
   return s:
 endfunction
 
-" s:None is custome None data type.
+" s:None is custom None data type.
 " @type none
 let s:None = { 'type': 'None' }
 
@@ -50,7 +50,7 @@ function! s:LinkedList.new() abort
   return deepcopy(self)
 endfunction
 
-" .add_first() addes given data to the head of LinkedList.
+" .add_first() adds given data to the head of LinkedList.
 " @param data: <any>
 function! s:LinkedList.add_first(data) abort
   let new_node = s:Node.new(a:data)
@@ -61,7 +61,7 @@ function! s:LinkedList.add_first(data) abort
   let self.head = new_node
 endfunction
 
-" .add_last() addes given data to the last of LinkedList.
+" .add_last() adds given data to the last of LinkedList.
 " @param data: <any>
 function! s:LinkedList.add_last(data) abort
   let new_node = s:Node.new(a:data)
@@ -83,6 +83,22 @@ function! s:LinkedList.size() abort
     let current = current.next
   endwhile
   return cnt
+endfunction
+
+" .to_string() returns string representation of LinkedList.
+function! s:LinkedList.to_string() abort
+  let str = '['
+  let current = self.head
+  if !s:is_none(current)
+    let str .= string(current.data)
+    let current = current.next
+  endif
+  while !s:is_none(current)
+    let str .= ', ' . string(current.data)
+    let current = current.next
+  endwhile
+  let str .= ']'
+  return str
 endfunction
 
 let &cpo = s:save_cpo
