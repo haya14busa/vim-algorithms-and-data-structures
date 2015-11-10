@@ -5,6 +5,7 @@ Describe Node
     execute PowerAssert.define('PowerAssert')
     let scope = data#LinkedList#import()
     let s:assert = PowerAssert.assert
+    let s:funcs = themis#helper('scope').funcs('autoload/data/LinkedList.vim')
   End
 
   Describe .new(data)
@@ -186,6 +187,30 @@ Describe LinkedList
       PowerAssert xs.last.prev.prev.prev ==# scope.None
     End
   End
+
+  Describe .remove_first()
+    It should remove first element from LinkedList.
+      let xs = scope.LinkedList.new()
+      let data1 = 1
+      let data2 = 2
+      call xs.add_first(data1)
+      call xs.add_first(data2)
+      PowerAssert xs.head.data is# data2
+      call xs.remove_first()
+      PowerAssert xs.head.data is# data1
+    End
+
+    It should remove first and only element from LinkedList.
+      let xs = scope.LinkedList.new()
+      let data1 = 1
+      call xs.add_first(data1)
+      PowerAssert xs.head.data is# data1
+      call xs.remove_first()
+      PowerAssert s:funcs.is_none(xs.head)
+      PowerAssert s:funcs.is_none(xs.last)
+    End
+  End
+
 
   Describe .size()
     It should returns 0 with empty LinkedList.

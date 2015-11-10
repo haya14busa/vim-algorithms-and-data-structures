@@ -74,6 +74,16 @@ function! s:LinkedList.add_last(data) abort
   endif
 endfunction
 
+" .remove_first() removes and returns the first element from LinkedList.
+function! s:LinkedList.remove_first() abort
+  let target = self.head
+  let self.head = target.next
+  if s:is_none(self.head)
+    let self.last = self.head
+  endif
+  return target
+endfunction
+
 " .size() returns size of LinkedList.
 function! s:LinkedList.size() abort
   let cnt = 0
