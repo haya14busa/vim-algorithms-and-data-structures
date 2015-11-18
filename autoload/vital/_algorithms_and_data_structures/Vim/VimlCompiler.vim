@@ -370,7 +370,7 @@ function! s:VimlCompiler.compile_slice(node)
 endfunction
 
 function! s:VimlCompiler.compile_dot(node)
-  return printf('(%s.%s)', self.compile(a:node.left), self.compile(a:node.right))
+  return printf('%s.%s', self.compile(a:node.left), self.compile(a:node.right))
 endfunction
 
 function! s:VimlCompiler.compile_call(node)
