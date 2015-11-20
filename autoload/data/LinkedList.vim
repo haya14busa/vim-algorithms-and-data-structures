@@ -8,6 +8,15 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:V = vital#of('algorithms_and_data_structures')
+execute s:V.import('Vim.PowerAssert').define('Assert')
+let s:assert = s:V.import('Vim.PowerAssert').assert
+
+let s:scope = vital#of('vital').import('Vim.ScriptLocal')
+if !exists('s:funcs')
+  let s:funcs = s:scope.sfuncs('autoload/vital/_algorithms_and_data_structures/Vim/PowerAssert.vim')
+endif
+
 function! data#LinkedList#import() abort
   return s:
 endfunction
@@ -75,13 +84,28 @@ function! s:LinkedList.add_last(data) abort
 endfunction
 
 " .remove_first() removes and returns the first element from LinkedList.
+" @return <any>
 function! s:LinkedList.remove_first() abort
+  "= pre condition ===
+  let _pre_size = self.size()
+  let _pre_list = deepcopy(self)
+  Assert self.size() > 0
+  echo PP(self)
+  Assert self.size() < 0
+  "===================
   let target = self.head
+  let result = target.data
   let self.head = target.next
   if s:is_none(self.head)
     let self.last = self.head
   endif
-  return target
+  "= post condition ==
+  Assert self.size() is# _pre_size - 1
+  let _post_list = deepcopy(self)
+  call _post_list.add_first(result)
+  Assert _post_list ==# _pre_list
+  "===================
+  return result
 endfunction
 
 " .size() returns size of LinkedList.
